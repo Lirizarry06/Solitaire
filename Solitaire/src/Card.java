@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 
 public class Card {
 
-	private suits Suit;			//may be Spade, Club, Heart, Diamond
+	private suits Suit;	
 	private int number; 		//may be 1-13. Aces are 1. Jacks, Queens, and Kings are 11, 12, and 13.
 	private boolean faceUp = false;		//stores whether or not the card's suit and number are visible
 	private Point location = new Point();		//location of the top-left corner of the card

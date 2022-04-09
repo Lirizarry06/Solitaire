@@ -41,9 +41,8 @@ public class Card {
 		return Suit == suits.HEART || Suit == suits.DIAMOND;
 	}
 	
-	//Returns whether this card can legally be put on top of the given other card
-	public boolean isStackable(Card other) {
-		return this.number == other.number - 1;
+	public int getNumber() {
+		return number;
 	}
 	
 	public Point getLocation() {

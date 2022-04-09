@@ -17,7 +17,6 @@ public class SolitairePanel extends JPanel {
 	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
 	
 	public SolitairePanel() {
-		this.setBackground(Color.GREEN);
 		
 		//create 52 cards in deck, one of every number for each suit.
 		deck = new ArrayList<Card>();

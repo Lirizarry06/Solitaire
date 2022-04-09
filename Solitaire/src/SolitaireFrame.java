@@ -9,7 +9,7 @@ import java.awt.event.*;
  */
 
 public class SolitaireFrame {
-	public static final int FRAME_WIDTH = 1000;
+	public static final int FRAME_WIDTH = 750;
 	public static final int FRAME_HEIGHT = 700;
 	private SolitairePanel sPanel;
 	
@@ -34,7 +34,7 @@ public class SolitaireFrame {
 		JButton newGameButton = new JButton("New Game");
 		JButton undoButton = new JButton("Undo");
 		JButton redoButton = new JButton("Redo");
-		JLabel timer = new JLabel("Timer: 0");
+		JLabel timer = new JLabel("Timer: 0 ");
 		
 		settingsBar.add(newGameButton);
 		settingsBar.add(undoButton);

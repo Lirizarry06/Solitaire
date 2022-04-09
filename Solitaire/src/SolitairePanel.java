@@ -11,8 +11,8 @@ import javax.swing.*;
 
 public class SolitairePanel extends JPanel {
 	private static final long serialVersionUID = 2442334202593446089L;
-	public static final int PANEL_WIDTH = 1000;
-	public static final int PANEL_HEIGHT = 400;
+	public static final int PANEL_WIDTH = 750;
+	public static final int PANEL_HEIGHT = 600;
 	private ArrayList<Card> deck;		//List of all cards. Used only for random selection/distribution
 	private ArrayList<ArrayList<Card>> columns;	//columns used for the game, represented as a 2D ArrayList.
 	
@@ -36,12 +36,12 @@ public class SolitairePanel extends JPanel {
 		
 		//randomly add cards from deck into columns
 		Random r = new Random();
-		for (int i = 1; i < 7; i++) {
-			for (int j = i; j > 0; j--) {
+		for (int i = 0; i < 7; i++) {
+			for (int j = i + 1; j > 0; j--) {
 				int index = r.nextInt(0,deck.size());
 				
 				//set location of card based on its index, before adding to column
-				deck.get(index).setLocation(new Point(0 + (170 * i), 50 + (50 * j)));
+				deck.get(index).setLocation(new Point(25 + (100 * i), 125 + (30 * j)));
 				
 				columns.get(i).add(deck.get(index));
 				deck.remove(index);

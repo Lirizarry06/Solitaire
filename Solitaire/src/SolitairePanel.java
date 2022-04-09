@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
@@ -15,6 +14,7 @@ public class SolitairePanel extends JPanel {
 	public static final int PANEL_HEIGHT = 600;
 	private ArrayList<Card> deck;		//List of all cards. Used only for random selection/distribution
 	private ArrayList<ArrayList<Card>> columns;	//columns used for the game, represented as a 2D ArrayList.
+	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
 	
 	public SolitairePanel() {
 		this.setBackground(Color.GREEN);
@@ -51,20 +51,24 @@ public class SolitairePanel extends JPanel {
 		}
 		
 		//randomly add remaining cards into stock pile
-		ArrayList<Card> stockPile = new ArrayList<Card>();
+		stockPile = new ArrayList<Card>();
 		while (!deck.isEmpty()) {
 			int index = r.nextInt(0,deck.size());
 			stockPile.add(deck.get(index));
 			deck.remove(index);
 		}
 		
-		//create ace piles
-		
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		//draw empty column markers
+		g.setColor(Color.DARK_GRAY);
+		for (int i = 0; i < 7; i++) {
+			g.drawRoundRect(25 + (100 * i), 155, 74, 99, 5, 5);
+		}
 		
 		//draw cards in columns
 		for (ArrayList<Card> col: columns) {
@@ -79,7 +83,21 @@ public class SolitairePanel extends JPanel {
 		}
 		
 		//draw stock pile
+		if (!stockPile.isEmpty()) {
+			try {
+				g.drawImage(stockPile.get(stockPile.size() - 1).getImage(), 25, 25, this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//draw empty ace pile markers
+		g.setColor(Color.DARK_GRAY);
+		for (int i = 0; i < 4; i++) {
+			g.drawRoundRect(325 + (100 * i), 25, 74, 99, 5, 5);
+		}
 		
 		//draw ace piles
+		
 	}
 }

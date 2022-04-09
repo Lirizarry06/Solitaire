@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
 
 /* Program: Solitaire.java
  * Date: 8 April 2022

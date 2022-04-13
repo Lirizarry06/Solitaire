@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 /* Program: Solitaire.java
  * Date: 8 April 2022
@@ -30,13 +31,23 @@ public class SolitaireFrame {
 		this.sPanel = new SolitairePanel();
 		sPanel.setBackground(Color.GREEN);
 		
+		//new game button
+		JButton newGameButton = new JButton("New Game");
+		newGameButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				sPanel.newGame();
+			}
+		});
+		
+		//undo button
+		JButton undoButton = new JButton("Undo");
+		
+		//redo button
+		JButton redoButton = new JButton("Redo");
+		
 		//set up top bar
 		JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		topBar.setBackground(Color.GREEN);
-		JButton newGameButton = new JButton("New Game");
-		JButton undoButton = new JButton("Undo");
-		JButton redoButton = new JButton("Redo");
-		
 		topBar.add(newGameButton);
 		topBar.add(undoButton);
 		topBar.add(redoButton);
@@ -52,9 +63,5 @@ public class SolitaireFrame {
 		frame.add(topBar, BorderLayout.NORTH);
 		frame.add(timerBar, BorderLayout.SOUTH);
 		frame.setVisible(true);
-	}
-	
-	public void newGame() {
-		this.sPanel = new SolitairePanel();
 	}
 }

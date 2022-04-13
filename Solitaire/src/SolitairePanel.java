@@ -17,8 +17,13 @@ public class SolitairePanel extends JPanel {
 	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
 	
 	public SolitairePanel() {
+		newGame();
+	}
+	
+	//creates a random tableau and stock pile and an empty ace pile.
+	public void newGame() {
 		
-		//create 52 cards in deck, one of every number for each suit.
+		//create 52-card deck
 		deck = new ArrayList<Card>();
 		for (int i = 1; i <= 13; i++) {
 			deck.add(new Card(Card.suits.CLUB, i));
@@ -41,10 +46,8 @@ public class SolitairePanel extends JPanel {
 				
 				//set location of card based on its index, before adding to column
 				deck.get(index).setLocation(new Point(25 + (100 * i), 125 + (30 * j)));
-				
 				columns.get(i).add(deck.get(index));
 				deck.remove(index);
-				
 			}
 			columns.get(i).get(0).flipOver();
 		}
@@ -57,9 +60,11 @@ public class SolitairePanel extends JPanel {
 			deck.remove(index);
 		}
 		
+		repaint();
 	}
 	
 	@Override
+	//renders everything in the panel
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		

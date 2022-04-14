@@ -42,7 +42,7 @@ public class SolitairePanel extends JPanel {
 		Random r = new Random();
 		for (int i = 0; i < 7; i++) {
 			for (int j = i + 1; j > 0; j--) {
-				int index = r.nextInt(0,deck.size());
+				int index = r.nextInt(deck.size());
 				
 				//set location of card based on its index, before adding to column
 				deck.get(index).setLocation(new Point(25 + (100 * i), 125 + (30 * j)));
@@ -55,7 +55,7 @@ public class SolitairePanel extends JPanel {
 		//randomly add remaining cards into stock pile
 		stockPile = new ArrayList<Card>();
 		while (!deck.isEmpty()) {
-			int index = r.nextInt(0,deck.size());
+			int index = r.nextInt(deck.size());
 			stockPile.add(deck.get(index));
 			deck.remove(index);
 		}

@@ -41,15 +41,16 @@ public class SolitairePanel extends JPanel {
 		//randomly add cards from deck into columns
 		Random r = new Random();
 		for (int i = 0; i < 7; i++) {
-			for (int j = i + 1; j > 0; j--) {
+			for (int j = 0; j < i + 1; j++) {
 				int index = r.nextInt(deck.size());
 				
 				//set location of card based on its index, before adding to column
-				deck.get(index).setLocation(new Point(25 + (100 * i), 125 + (30 * j)));
+				deck.get(index).setLocation(new Point(25 + (100 * i), 150 + (30 * j)));
 				columns.get(i).add(deck.get(index));
 				deck.remove(index);
 			}
-			columns.get(i).get(0).flipOver();
+			//flip over topmost card in each column
+			columns.get(i).get(columns.get(i).size() - 1).flipOver();
 		}
 		
 		//randomly add remaining cards into stock pile
@@ -71,12 +72,12 @@ public class SolitairePanel extends JPanel {
 		//draw empty column markers
 		g.setColor(Color.DARK_GRAY);
 		for (int i = 0; i < 7; i++) {
-			g.drawRoundRect(25 + (100 * i), 155, 74, 99, 5, 5);
+			g.drawRoundRect(25 + (100 * i), 150, 74, 99, 5, 5);
 		}
 		
 		//draw cards in columns
 		for (ArrayList<Card> col: columns) {
-			for (int i = col.size() - 1; i >= 0; i--) {
+			for (int i = 0; i < col.size(); i++) {
 				Card c = col.get(i);
 				try {
 					g.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y, this);

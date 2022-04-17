@@ -111,7 +111,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		while (col.size() - 1 >= index) {
 			col.remove(col.size() - 1);
 		}
-		if (col.size() != 0) {
+		if (col.size() != 0 && !col.get(col.size() - 1).faceUp) {
 			col.get(col.size() - 1).flipOver();
 		}
 	}

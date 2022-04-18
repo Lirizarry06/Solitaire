@@ -12,10 +12,10 @@ import javax.imageio.ImageIO;
 
 public class Card {
 
-	private suits Suit;	
-	private int number; 		//may be 1-13. Aces are 1. Jacks, Queens, and Kings are 11, 12, and 13.
-	private boolean faceUp = false;		//stores whether or not the card's suit and number are visible
-	private Point location = new Point();		//location of the top-left corner of the card
+	public suits Suit;	
+	public int number; 		//may be 1-13. Aces are 1. Jacks, Queens, and Kings are 11, 12, and 13.
+	public boolean faceUp = false;		//stores whether or not the card's suit and number are visible
+	public Point location = new Point();		//location of the top-left corner of the card
 	
 	//Enumerates four possible suits.
 	enum suits {

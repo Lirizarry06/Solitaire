@@ -17,8 +17,8 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 	public static final int PANEL_HEIGHT = 600;
 	private ArrayList<Card> deck;		//List of all cards. Used only for random selection/distribution
 	private Tableau tableau;			//Main game area in which columns of cards are moved around
-	private int[] selectedIndex;		//indexes of starting card of currently selected stack of cards
 	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
+	private SelectedCards selected = new SelectedCards();		//currently selected cards
 	
 	public SolitairePanel() {
 		newGame();
@@ -49,8 +49,7 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 			stockPile.add(deck.get(index));
 			deck.remove(index);
 		}
-		
-		selectedIndex = null;
+		selected.clear();
 		repaint();
 	}
 	
@@ -93,31 +92,68 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		}
 		
 		//draw ace piles
+		
+		//draw selected cards
+		if (!selected.isEmpty()) {
+			for (int i = 0; i < selected.size(); i++) {
+				Card c = selected.get(i);
+				try {
+					g.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y, this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	//Mouse press events (select cards)
 	public void mousePressed(MouseEvent e) {
 		Point mouseLocation = new Point(e.getX(), e.getY());
 		
-		//select tableau cards if applicable
-		selectedIndex = tableau.selectIndex(mouseLocation);
+		//check if valid tableau select location selected
+		int[] tableauIndex = tableau.getIndexAtPoint(mouseLocation);
+		if (tableauIndex != null && !tableau.get(tableauIndex[0]).isEmpty()) {
+			selected.pickUpCards(tableau.removeCards(tableauIndex[0], tableauIndex[1]), tableauIndex);
+			selected.deltaX = mouseLocation.x - selected.get(0).getLocation().x;
+			selected.deltaY = mouseLocation.y - selected.get(0).getLocation().y;
+		}
+		
+		//check if valid stock pile select location selected
 	}
 
 	//Mouse release events (drop cards)
 	public void mouseReleased(MouseEvent e) {
 		Point mouseLocation = new Point(e.getX(), e.getY());
 		
-		//move cards within tableau upon release if applicable
-		int[] releaseIndex = tableau.selectIndex(mouseLocation);
-		if (selectedIndex != null && releaseIndex != null) {
-			tableau.addCards(selectedIndex[0], selectedIndex[1], releaseIndex[0]);
+		if (!selected.isEmpty()) {
+			
+			//check if dropped in tableau
+			int[] tableauIndex = tableau.getIndexAtPoint(mouseLocation);
+			if (tableauIndex != null) {
+				if (tableau.addCards(selected, tableauIndex[0], tableauIndex[1])) {
+					tableau.flipLast(selected.origIndex[0]);
+				} else {
+					tableau.replaceCards(selected, selected.origIndex[0]);
+				}
+			} else {
+				tableau.replaceCards(selected, selected.origIndex[0]);
+			}
+			
+			//check if dropped in ace piles
+			
+			
+			selected.releaseCards();
 			repaint();
 		}
-		selectedIndex = null;
 	}
 	
 	//Mouse dragged events (animate card movement)
 	public void mouseDragged(MouseEvent e) {
+		Point mouseLocation = new Point(e.getX(), e.getY());
+		if (!selected.isEmpty()) {
+			selected.updateLocations(mouseLocation);
+			repaint();
+		}
 	}
 	
 	//unused methods of implemented interfaces

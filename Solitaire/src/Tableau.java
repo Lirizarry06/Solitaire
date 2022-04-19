@@ -40,14 +40,14 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 	
 	//returns the index and column number of the topmost card that contains the given Point
 	//(or of the empty column if Point is within empty column marker)
-	public int[] selectIndex(Point p) {
+	public int[] getIndexAtPoint(Point p) {
 		for (int i = 0; i < 7; i++) {
-			int[] xCoords = {25 + (100 * i), 100 + (100 * i), 100 + (100 * i), 25 + (100 * i)};
-			int[] yCoords = {150, 150, 250, 250};
-			Polygon cardArea = new Polygon(xCoords, yCoords, 4);
-			//if column is empty
+			//if column is empty, check if marker area was clicked
 			if (get(i).size() == 0) {
-				if (cardArea.contains(p)) {
+				int[] xCoords = {25 + (100 * i), 100 + (100 * i), 100 + (100 * i), 25 + (100 * i)};
+				int[] yCoords = {150, 150, 250, 250};
+				Polygon markerArea = new Polygon(xCoords, yCoords, 4);
+				if (markerArea.contains(p)) {
 					int[] result = {i,0};
 					return result;
 				}
@@ -55,10 +55,8 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 			} else {
 				for (int j = get(i).size() - 1; j >= 0; j--) {
 					Card c = get(i).get(j);
-					cardArea = new Polygon(new int[] {c.getLocation().x, c.getLocation().x + 75, c.getLocation().x + 75, c.getLocation().x},
-							new int[] {c.getLocation().y, c.getLocation().y, c.getLocation().y + 100, c.getLocation().y + 100}, 4);
 					if (c.faceUp) {
-						if (cardArea.contains(p)) {
+						if (c.area.contains(p)) {
 							int[] result = {i,j};
 							return result;
 						}
@@ -69,50 +67,58 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		return null;
 	}
 	
-	//gets the stack of cards starting at the given indexes
-	public List<Card> getStack(int[] indexes) {
-		if (indexes == null) {
-			return null;
-		} else {
-			return get(indexes[0]).subList(indexes[1], get(indexes[0]).size());
-		}
-	}
-	
-	//adds a stack of cards to given column if move is legal
-	public void addCards(int colNum, int index, int destColNum) {
-		ArrayList<Card> destCol = get(destColNum);			//destination column
-		List<Card> stack = getStack(new int[] {colNum, index});
-		Card bottomStackCard = stack.get(0);				//bottom-most card in stack to be moved
+	//adds selected cards to given column if move is legal, and clear SelectedCards
+	//returns true if successful, false if not.
+	public boolean addCards(SelectedCards stack, int colNum, int index) {
+		Card stackCard = stack.get(0);				//bottom-most card in stack to be moved
+		ArrayList<Card> col = get(colNum);
 		
 		//if column is not currently empty
-		if (destCol.size() > 0) {
-			Card destColCard = destCol.get(destCol.size() - 1);	//topmost card on destination column
+		if (col.size() > 0) {
+			Card colCard = col.get(col.size() - 1);	//topmost card on destination column
 			//check legality before moving stack onto destination column and setting new locations
-			if (destColCard.isRed() != bottomStackCard.isRed() && destColCard.getNumber() == bottomStackCard.getNumber() + 1) {
-				destCol.addAll(stack);
-				for (int i = 0; i < destCol.size(); i++) {
-					destCol.get(i).setLocation(new Point(25 + (100 * destColNum), 150 + (30 * i)));
+			if (colCard.isRed() != stackCard.isRed() && colCard.getNumber() == stackCard.getNumber() + 1) {
+				col.addAll(stack);
+				for (int i = 0; i < col.size(); i++) {
+					col.get(i).setLocation(new Point(25 + (100 * colNum), 150 + (30 * i)));
 				}
-				removeCards(colNum, index);
+				stack.clear();
+				return true;
 			}
 		//column is currently empty (only a king can start this column)
-		} else if (bottomStackCard.getNumber() == 13) {
-			destCol.addAll(stack);
-			for (int i = 0; i < destCol.size(); i++) {
-				destCol.get(i).setLocation(new Point(25 + (100 * destColNum), 150 + (30 * i)));
+		} else if (stackCard.getNumber() == 13) {
+			col.addAll(stack);
+			for (int i = 0; i < col.size(); i++) {
+				col.get(i).setLocation(new Point(25 + (100 * colNum), 150 + (30 * i)));
 			}
-			removeCards(colNum, index);
+			stack.clear();
+			return true;
+		}
+		return false;
+	}
+	
+	public void replaceCards(SelectedCards stack, int colNum) {
+		ArrayList<Card> col = get(colNum); 
+		col.addAll(stack);
+		for (int i = 0; i < col.size(); i++) {
+			col.get(i).setLocation(new Point(25 + (100 * colNum), 150 + (30 * i)));
 		}
 	}
 	
-	//removes a stack of cards from the given column, starting with the given card
-	public void removeCards(int colNum, int index) {
+	//removes and returns a stack of cards from the given column, starting with the given card
+	public ArrayList<Card> removeCards(int colNum, int index) {
 		ArrayList<Card> col = get(colNum);
+		ArrayList<Card> returnStack = new ArrayList<Card>();
 		while (col.size() - 1 >= index) {
-			col.remove(col.size() - 1);
+			returnStack.add(col.get(index));
+			col.remove(index);
 		}
-		if (col.size() != 0 && !col.get(col.size() - 1).faceUp) {
-			col.get(col.size() - 1).flipOver();
+		return returnStack;
+	}
+	
+	public void flipLast (int colNum) {
+		if (get(colNum).size() != 0) {
+			get(colNum).get(get(colNum).size() - 1).faceUp = true;
 		}
 	}
 }

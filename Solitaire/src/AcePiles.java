@@ -1,21 +1,18 @@
 import java.awt.Point;
+import java.awt.Polygon;
 import java.util.ArrayList;
 
-//Date: April 18, 2022
-
-//public class AcePiles {
-//	public static void main(String[] args) {
-	//	acepiles = new AcePiles[numOfAcePiles];
-	//		for(int a = 0; a < 4; a++) {
-		//		acepiles[a] = new AcePiles(tableau[col.size - a - 1].getx()), int y, deck.Width;
-	//		}
-//}
-
+/* Program: AcePiles.java
+   Date: April 18, 2022
+   Desc: This class represents the piles in the top-left that must be filled to win the game.
+*/
 
 public class AcePiles extends ArrayList<ArrayList<Card>> {
+	
 	private static final long serialVersionUID = 1260372991802134488L; 
-	//create columns
+	
 	public AcePiles() {
+		//create columns
 		 for (int i = 0; i < 4; i++){
 				this.add(new ArrayList<Card>());	
 		 }
@@ -47,13 +44,32 @@ public class AcePiles extends ArrayList<ArrayList<Card>> {
 		}
 		return false;
 	}
+	
+	//returns whether there are kings in every pile
 	public boolean Solved() {
 		for (int i = 0; i < 4; i++) {
-			if (get(i).get(get(i).size() - 1).number != 13) {
+			if (get(i).size() != 0) {
+				if (get(i).get(get(i).size() - 1).number != 13) {
+					return false;
+				}
+			} else {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	//returns the index of the pile at the given Point
+	public int[] getIndexAtPoint(Point p) {
+		for (int i = 0; i < 4; i++) {
+			int[] xCoords = new int[] {325 + (100 * i), 425 + (100 * i), 425 + (100 * i), 325 + (100 * i)};
+			int[] yCoords = new int[] {25, 25, 125, 125};
+			Polygon pileArea = new Polygon(xCoords, yCoords, 4);
+			if (pileArea.contains(p)) {
+				return new int[] {i};
+			}
+		}
+		return null;
 	}
 }
 

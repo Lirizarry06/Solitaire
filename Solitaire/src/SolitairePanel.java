@@ -19,6 +19,7 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 	private Tableau tableau;			//Main game area in which columns of cards are moved around
 	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
 	private SelectedCards selected = new SelectedCards();		//currently selected cards
+	private AcePiles acepiles = new AcePiles(); // ace pile build up from Ace to King
 	
 	public SolitairePanel() {
 		newGame();
@@ -93,6 +94,17 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		
 		//draw ace piles
 		
+		for (int i = 0; i < 4; i++) {
+			if (!acepiles.get(i).isEmpty()) {
+				ArrayList<Card> col = acepiles.get(i);
+				Card c = col.get(col.size() - 1);
+				try {
+					g.drawImage(c.getImage(), c.location.x, c.location.y, this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}	
 		//draw selected cards
 		if (!selected.isEmpty()) {
 			for (int i = 0; i < selected.size(); i++) {

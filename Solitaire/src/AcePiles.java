@@ -62,7 +62,7 @@ public class AcePiles extends ArrayList<ArrayList<Card>> {
 	//returns the index of the pile at the given Point
 	public int[] getIndexAtPoint(Point p) {
 		for (int i = 0; i < 4; i++) {
-			int[] xCoords = new int[] {325 + (100 * i), 425 + (100 * i), 425 + (100 * i), 325 + (100 * i)};
+			int[] xCoords = new int[] {325 + (100 * i), 400 + (100 * i), 400 + (100 * i), 325 + (100 * i)};
 			int[] yCoords = new int[] {25, 25, 125, 125};
 			Polygon pileArea = new Polygon(xCoords, yCoords, 4);
 			if (pileArea.contains(p)) {

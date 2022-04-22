@@ -19,6 +19,7 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 	private Tableau tableau;			//Main game area in which columns of cards are moved around
 	private StockPile stockPile; 	//extra cards located in the top-left
 	private SelectedCards selected = new SelectedCards();		//currently selected cards
+	private AcePiles acePiles = new AcePiles(); // ace pile build up from Ace to King
 	
 	public SolitairePanel() {
 		newGame();
@@ -41,8 +42,12 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		//create random tableau using deck
 		tableau = new Tableau(deck);
 		
+		//create empty ace piles
+		acePiles = new AcePiles();
+		
 		//randomly add remaining cards into stock pile
 		stockPile = new StockPile(deck);
+		
 		selected.clear();
 		repaint();
 	}
@@ -78,6 +83,7 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 				e.printStackTrace();
 			}
 		}
+		
 		//draw discardPile
 		if (!stockPile.discardPile.isEmpty()) {
 			try {
@@ -94,7 +100,17 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		}
 		
 		//draw ace piles
-		
+		for (int i = 0; i < 4; i++) {
+			if (!acePiles.get(i).isEmpty()) {
+				ArrayList<Card> col = acePiles.get(i);
+				Card c = col.get(col.size() - 1);
+				try {
+					g.drawImage(c.getImage(), c.location.x, c.location.y, this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}	
 		//draw selected cards
 		if (!selected.isEmpty()) {
 			for (int i = 0; i < selected.size(); i++) {
@@ -121,17 +137,19 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 			selected.fromTableau = true;
 		}
 		
-		//cycle stockpile cards
-		if (stockPile.stockSelectableArea.contains(mouseLocation)){
-			stockPile.cycleCard();
-		}
-	//pick up discardpile cards
-		if (stockPile.discardSelectableArea.contains(mouseLocation)){
+		//pick up discard pile card if valid discard pile selected
+		if (stockPile.discardSelectableArea.contains(mouseLocation) && !stockPile.discardPile.isEmpty()){
 			selected.pickUpCards(stockPile.removeLast(), new int[] {stockPile.discardPile.size() - 1});
 			selected.deltaX = mouseLocation.x - selected.get(0).location.x;
 			selected.deltaY = mouseLocation.y - selected.get(0).location.y;
 			selected.fromTableau = false;
 		}
+		
+		//cycle stock pile cards if stock pile selected
+		if (stockPile.stockSelectableArea.contains(mouseLocation)){
+			stockPile.cycleCard();
+		}
+				
 		repaint();
 	}
 
@@ -141,20 +159,42 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		
 		if (!selected.isEmpty()) {
 			
-			//check if dropped in tableau
 			int[] tableauIndex = tableau.getIndexAtPoint(mouseLocation);
+			int[] acePilesIndex = acePiles.getIndexAtPoint(mouseLocation);
+			
+			//check if dropped in tableau
 			if (tableauIndex != null) {
 				if (tableau.addCards(selected, tableauIndex[0], tableauIndex[1])) {
-					tableau.flipLast(selected.origIndex[0]);
+					if (selected.fromTableau == true) {
+						tableau.flipLast(selected.origIndex[0]);
+					}
+				//non-valid tableau drop location selected
+				} else if (selected.fromTableau == true) {	
+					tableau.replaceCards(selected, selected.origIndex[0]);
+				} else {
+					stockPile.replaceCards(selected, selected.origIndex);
 				}
-			}
-			if (selected.fromTableau = true){	
+			
+			//check if dropped in ace piles
+			} else if (acePilesIndex != null) {
+				if (acePiles.addCards(selected, acePilesIndex[0])) {
+					if (selected.fromTableau == true) {
+						tableau.flipLast(selected.origIndex[0]);
+					}
+				//non-valid ace pile drop location selected
+				} else if (selected.fromTableau == true) {	
+					tableau.replaceCards(selected, selected.origIndex[0]);
+				} else {
+					stockPile.replaceCards(selected, selected.origIndex);
+				}
+			
+			//non-valid, empty drop location selected
+			} else if (selected.fromTableau == true) {	
 				tableau.replaceCards(selected, selected.origIndex[0]);
 			} else {
 				stockPile.replaceCards(selected, selected.origIndex);
-		}
+			}
 			
-			//check if dropped in ace piles
 			selected.releaseCards();
 			repaint();
 		}

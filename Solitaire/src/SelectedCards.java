@@ -13,6 +13,7 @@ public class SelectedCards extends ArrayList<Card> {
 	public ArrayList<Point> locations = new ArrayList<>();	//list of original locations of cards
 	public int deltaX;			//
 	public int deltaY;			//used to calculate offset when updating card location on mouse drag
+	public boolean fromTableau;
 	
 	//adds the cards from the given ArrayList to this list and stores their initial locations
 	public void pickUpCards(ArrayList<Card> stack, int[] origIndex) {

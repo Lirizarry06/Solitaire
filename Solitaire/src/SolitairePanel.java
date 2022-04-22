@@ -17,9 +17,8 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 	public static final int PANEL_HEIGHT = 600;
 	private ArrayList<Card> deck;		//List of all cards. Used only for random selection/distribution
 	private Tableau tableau;			//Main game area in which columns of cards are moved around
-	private ArrayList<Card> stockPile = new ArrayList<Card>(); 	//extra cards located in the top-left
+	private StockPile stockPile; 	//extra cards located in the top-left
 	private SelectedCards selected = new SelectedCards();		//currently selected cards
-	private AcePiles acePiles = new AcePiles(); // ace pile build up from Ace to King
 	
 	public SolitairePanel() {
 		newGame();
@@ -42,17 +41,8 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		//create random tableau using deck
 		tableau = new Tableau(deck);
 		
-		//create empty ace piles
-		acePiles = new AcePiles();
-		
 		//randomly add remaining cards into stock pile
-		Random r = new Random();
-		stockPile = new ArrayList<Card>();
-		while (!deck.isEmpty()) {
-			int index = r.nextInt(deck.size());
-			stockPile.add(deck.get(index));
-			deck.remove(index);
-		}
+		stockPile = new StockPile(deck);
 		selected.clear();
 		repaint();
 	}
@@ -88,6 +78,14 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 				e.printStackTrace();
 			}
 		}
+		//draw discardPile
+		if (!stockPile.discardPile.isEmpty()) {
+			try {
+				g.drawImage(stockPile.discardPile.get(stockPile.discardPile.size() - 1).getImage(), 125, 25, this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		//draw empty ace pile markers
 		g.setColor(Color.DARK_GRAY);
@@ -97,17 +95,6 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		
 		//draw ace piles
 		
-		for (int i = 0; i < 4; i++) {
-			if (!acePiles.get(i).isEmpty()) {
-				ArrayList<Card> col = acePiles.get(i);
-				Card c = col.get(col.size() - 1);
-				try {
-					g.drawImage(c.getImage(), c.location.x, c.location.y, this);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}	
 		//draw selected cards
 		if (!selected.isEmpty()) {
 			for (int i = 0; i < selected.size(); i++) {
@@ -131,9 +118,21 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 			selected.pickUpCards(tableau.removeCards(tableauIndex[0], tableauIndex[1]), tableauIndex);
 			selected.deltaX = mouseLocation.x - selected.get(0).location.x;
 			selected.deltaY = mouseLocation.y - selected.get(0).location.y;
+			selected.fromTableau = true;
 		}
 		
-		//pick up stock pile card if valid stock pile location selected
+		//cycle stockpile cards
+		if (stockPile.stockSelectableArea.contains(mouseLocation)){
+			stockPile.cycleCard();
+		}
+	//pick up discardpile cards
+		if (stockPile.discardSelectableArea.contains(mouseLocation)){
+			selected.pickUpCards(stockPile.removeLast(), new int[] {stockPile.discardPile.size() - 1});
+			selected.deltaX = mouseLocation.x - selected.get(0).location.x;
+			selected.deltaY = mouseLocation.y - selected.get(0).location.y;
+			selected.fromTableau = false;
+		}
+		repaint();
 	}
 
 	//Mouse release events (drop cards)
@@ -149,16 +148,13 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 					tableau.flipLast(selected.origIndex[0]);
 				}
 			}
+			if (selected.fromTableau = true){	
+				tableau.replaceCards(selected, selected.origIndex[0]);
+			} else {
+				stockPile.replaceCards(selected, selected.origIndex);
+		}
 			
 			//check if dropped in ace piles
-			int[] acePilesIndex = acePiles.getIndexAtPoint(mouseLocation);
-			if (acePilesIndex != null) {
-				if (acePiles.addCards(selected, acePilesIndex[0])) {
-					tableau.flipLast(selected.origIndex[0]);
-				}
-			}
-			
-			tableau.replaceCards(selected, selected.origIndex[0]);
 			selected.releaseCards();
 			repaint();
 		}

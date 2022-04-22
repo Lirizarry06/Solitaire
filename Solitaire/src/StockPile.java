@@ -53,7 +53,9 @@ public class StockPile extends ArrayList <Card>{
 	
 	//moves all cards from discard pile back into stock pile
 	public void reset() {
-		addAll(discardPile);
+		for (int i = discardPile.size() - 1; i >= 0; i--) {
+			add(discardPile.get(i));
+		}
 		discardPile.clear();
 		for (Card c : this) {
 			c.faceUp = false;

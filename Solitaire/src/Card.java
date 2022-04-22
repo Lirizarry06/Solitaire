@@ -18,6 +18,7 @@ public class Card {
 	public boolean faceUp = false;			//stores whether or not the card's suit and number are visible
 	public Point location = new Point();	//location of the top-left corner of the card
 	public Polygon area;					//selectable area of card
+	public BufferedImage image;				//image of card face
 	
 	//Enumerates four possible suits.
 	enum suits {
@@ -31,6 +32,11 @@ public class Card {
 	public Card(suits suit, int number) {
 		this.Suit = suit;
 		this.number = number;
+		try {
+			image = ImageIO.read(new File("card-images/" + this.number + "_" + this.Suit + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//Returns true if this card is a red card
@@ -49,7 +55,7 @@ public class Card {
 	//Returns the image file of this card
 	public BufferedImage getImage() throws IOException {
 		if (faceUp) {
-			return ImageIO.read(new File("card-images/" + this.number + "_" + this.Suit + ".png"));
+			return image;
 		} else {
 			return ImageIO.read(new File("card-images/back.png"));
 		}

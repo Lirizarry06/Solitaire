@@ -167,17 +167,12 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 				if (tableau.addCards(selected, tableauIndex[0], tableauIndex[1])) {
 					//create history entry
 					if (selected.fromTableau == true && selected.origIndex != tableauIndex) {
-						if (tableau.flipLast(selected.origIndex[0])) {
-							history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.TABLEAU, 
-									new int[] {tableauIndex[0], tableauIndex[1] + 1}, HistoryEntry.Container.TABLEAU, true));
-						} else {
-							history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.TABLEAU, 
-									new int[] {tableauIndex[0], tableauIndex[1] + 1}, HistoryEntry.Container.TABLEAU));
-						}
-						
+						history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.TABLEAU, 
+								new int[] {tableauIndex[0], tableauIndex[1] + 1}, HistoryEntry.Container.TABLEAU,
+								tableau.flipLast(selected.origIndex[0])));
 					} else {
 						history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.STOCKPILE,
-								new int[] {tableauIndex[0], tableauIndex[1] + 1}, HistoryEntry.Container.TABLEAU));
+								new int[] {tableauIndex[0], tableauIndex[1] + 1}, HistoryEntry.Container.TABLEAU, false));
 					}
 				//non-valid tableau drop location selected
 				} else if (selected.fromTableau == true) {	
@@ -191,16 +186,11 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 				if (acePiles.addCards(selected, acePilesIndex[0])) {
 					//create history entry
 					if (selected.fromTableau == true) {
-						if (tableau.flipLast(selected.origIndex[0])) {
 							history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.TABLEAU, 
-									acePilesIndex, HistoryEntry.Container.ACEPILE, true));
-						} else {
-							history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.TABLEAU, 
-									acePilesIndex, HistoryEntry.Container.ACEPILE));
-						}
+									acePilesIndex, HistoryEntry.Container.ACEPILE, tableau.flipLast(selected.origIndex[0])));
 					} else {
 						history.add(new HistoryEntry(selected.origIndex, HistoryEntry.Container.STOCKPILE,
-								acePilesIndex, HistoryEntry.Container.ACEPILE));
+								acePilesIndex, HistoryEntry.Container.ACEPILE, false));
 					}
 				//non-valid ace pile drop location selected
 				} else if (selected.fromTableau == true) {	

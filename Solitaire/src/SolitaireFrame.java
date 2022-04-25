@@ -36,14 +36,27 @@ public class SolitaireFrame {
 		newGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				sPanel.newGame();
+				sPanel.repaint();
 			}
 		});
 		
 		//undo button
 		JButton undoButton = new JButton("Undo");
+		undoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				sPanel.history.undo();
+				sPanel.repaint();
+			}
+		});
 		
 		//redo button
 		JButton redoButton = new JButton("Redo");
+		redoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				sPanel.history.redo();
+				sPanel.repaint();
+			}
+		});
 		
 		//set up top bar
 		JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -52,16 +65,9 @@ public class SolitaireFrame {
 		topBar.add(undoButton);
 		topBar.add(redoButton);
 		
-		//set up timer bar
-		JPanel timerBar = new JPanel(new BorderLayout());
-		timerBar.setBackground(Color.GREEN);
-		JLabel timer = new JLabel("Timer: 0 ");
-		timerBar.add(timer, BorderLayout.EAST);
-		
 		//add all components to frame and make visible
 		frame.add(sPanel, BorderLayout.CENTER);
 		frame.add(topBar, BorderLayout.NORTH);
-		frame.add(timerBar, BorderLayout.SOUTH);
 		frame.setVisible(true);
 	}
 }

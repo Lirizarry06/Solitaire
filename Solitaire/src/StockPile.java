@@ -28,7 +28,6 @@ public class StockPile extends ArrayList <Card>{
 		//initialize empty discard pile
 		discardPile = new ArrayList<Card>();
 		
-		
 		//create selectable areas
 		int[] xCoords = new int[] {25,100,100,25};
 		int[] yCoords = new int[] {25,25,125,125};

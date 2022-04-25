@@ -47,7 +47,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 				int[] yCoords = {150, 150, 250, 250};
 				Polygon markerArea = new Polygon(xCoords, yCoords, 4);
 				if (markerArea.contains(p)) {
-					int[] result = {i,0};
+					int[] result = {i,-1};
 					return result;
 				}
 			//if column is not empty
@@ -115,9 +115,13 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		return returnStack;
 	}
 	
-	public void flipLast (int colNum) {
+	public boolean flipLast (int colNum) {
 		if (get(colNum).size() != 0) {
-			get(colNum).get(get(colNum).size() - 1).faceUp = true;
+			if (get(colNum).get(get(colNum).size() - 1).faceUp != true) {
+				get(colNum).get(get(colNum).size() - 1).faceUp = true;
+				return true;
+			}
 		}
+		return false;
 	}
 }

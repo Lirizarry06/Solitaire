@@ -45,14 +45,10 @@ public class AcePiles extends ArrayList<ArrayList<Card>> {
 		return false;
 	}
 	
-	//returns whether there are kings in every pile
-	public boolean Solved() {
+	//returns whether all piles are full
+	public boolean checkForSolved() {
 		for (int i = 0; i < 4; i++) {
-			if (get(i).size() != 0) {
-				if (get(i).get(get(i).size() - 1).number != 13) {
-					return false;
-				}
-			} else {
+			if (get(i).size() != 13) {
 				return false;
 			}
 		}

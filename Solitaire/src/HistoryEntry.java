@@ -16,18 +16,12 @@ public class HistoryEntry {
 		ACEPILE;
 	}
 	
-	public HistoryEntry(int[] prevIndex, Container prevContainer, int[] postIndex, Container postContainer) {
+	public HistoryEntry(int[] prevIndex, Container prevContainer, int[] postIndex, Container postContainer, 
+			boolean cardFlipped) {
 		this.prevIndex = prevIndex;
 		this.prevContainer = prevContainer;
 		this.postIndex = postIndex;
 		this.postContainer = postContainer;
-	}
-	
-	//alternate constructor that sets cardFlipped to true, indicating a card was
-	//flipped face-up by this move
-	public HistoryEntry(int[] prevIndex, Container prevContainer, int[] postIndex, Container postContainer, 
-			boolean cardFlipped) {
-		this(prevIndex, prevContainer, postIndex, postContainer);
 		this.cardFlipped = cardFlipped;
 	}
 }

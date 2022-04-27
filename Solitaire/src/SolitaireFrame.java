@@ -24,7 +24,7 @@ public class SolitaireFrame {
 		frame.setLocation(new Point((int)(screenSize.width/2.0 - FRAME_WIDTH/2.0), 
 						(int)(screenSize.height/2.0 - FRAME_HEIGHT/2.0 )));	
 		
-		//set icon and title bar color
+		//set icon
 		frame.setIconImage(new ImageIcon("card-images/icon.png").getImage());
 		
 		//set up game panel

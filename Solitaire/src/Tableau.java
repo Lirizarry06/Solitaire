@@ -50,7 +50,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 					int[] result = {i,-1};
 					return result;
 				}
-			//if column is not empty
+			//if column is not empty, check if a card was clicked
 			} else {
 				for (int j = get(i).size() - 1; j >= 0; j--) {
 					Card c = get(i).get(j);
@@ -66,7 +66,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		return null;
 	}
 	
-	//adds selected cards to given column if move is legal, and clear SelectedCards
+	//adds selected cards to given column if move is legal, and clears SelectedCards
 	//returns true if successful, false if not.
 	public boolean addCards(SelectedCards stack, int colNum, int index) {
 		Card stackCard = stack.get(0);				//bottom-most card in stack to be moved
@@ -96,6 +96,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		return false;
 	}
 	
+	//adds cards from a selected cards object back into original column for snap-back behavior
 	public void replaceCards(SelectedCards stack, int colNum) {
 		ArrayList<Card> col = get(colNum); 
 		col.addAll(stack);
@@ -115,6 +116,7 @@ public class Tableau extends ArrayList<ArrayList<Card>> {
 		return returnStack;
 	}
 	
+	//flips the last card in the given column. Returns false if the card is already face-up or if column is empty
 	public boolean flipLast (int colNum) {
 		if (get(colNum).size() != 0) {
 			if (get(colNum).get(get(colNum).size() - 1).faceUp != true) {

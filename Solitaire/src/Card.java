@@ -60,8 +60,4 @@ public class Card {
 			return ImageIO.read(new File("card-images/back.png"));
 		}
 	}
-	
-	public String toString() {
-		return this.Suit + " " + this.number;
-	}
 }

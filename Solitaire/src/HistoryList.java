@@ -25,13 +25,13 @@ public class HistoryList extends ArrayList<HistoryEntry> {
 	//the list has reached 100 entries
 	@Override
 	public boolean add(HistoryEntry entry) {
-		//if size will exceed 100, remove the earliest entry
-		if (size() + 1 > 100) {
+		//if size will exceed max length, remove the earliest entry
+		if (size() + 1 > MAX_LENGTH) {
 			remove(0);
 			currentIndex -= 1;
 		}
 		
-		//if an entry is added after an undo has occurred, remove all subsequent entries
+		//if an entry is added after an undo has occurred, remove all subsequent history entries
 		//before adding the new one
 		while (currentIndex < size()) {
 			remove(size() - 1);

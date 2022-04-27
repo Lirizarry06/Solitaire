@@ -3,6 +3,11 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.Random;
 
+/* Program: StockPile.java
+ * Date: 21 April 2022
+ * Desc: This class represents the extra cards in the top-left, which can be cycled through and placed at any time. 
+ */
+
 public class StockPile extends ArrayList <Card>{
 	
 	private static final long serialVersionUID = -3773057250436319588L;
@@ -38,7 +43,7 @@ public class StockPile extends ArrayList <Card>{
 		discardSelectableArea = new Polygon(xCoords,yCoords,4);
 	}	
 	
-	//moves one card from the stock pile to the discard pile, resets if stock pile is empty
+	//moves one card from the stock pile to the discard pile, and resets cycle if stock pile is empty
 	public void cycleCard() {
 		if (!isEmpty()) {
 			discardPile.add(get(size()-1));
@@ -73,7 +78,7 @@ public class StockPile extends ArrayList <Card>{
 		return null;
 	}
 	
-	//adds cards from a selected cards object back into discard pile
+	//adds cards from a selected cards object back into discard pile for snap-back behavior
 	public void replaceCards(SelectedCards stack, int[]origIndex) {
 		discardPile.add(stack.get(0));
 		discardPile.get(discardPile.size() - 1).location = new Point(125,25);

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public class SelectedCards extends ArrayList<Card> {
 
 	private static final long serialVersionUID = -8711653155556335558L;
-	public int[] origIndex;		//original index of the cards in their previous list
+	public int[] origIndex;		//original index of the cards in their previous container
 	public ArrayList<Point> locations = new ArrayList<>();	//list of original locations of cards
-	public int deltaX;			//
-	public int deltaY;			//used to calculate offset when updating card location on mouse drag
-	public Boolean fromTableau;
+	public int deltaX;			//used to calculate offset when updating card location on mouse drag
+	public int deltaY;			//
+	public Boolean fromTableau; //whether this card's previous container was the tableau
 	
 	//adds the cards from the given ArrayList to this list and stores their initial locations
 	public void pickUpCards(ArrayList<Card> stack, int[] origIndex) {
@@ -24,7 +24,7 @@ public class SelectedCards extends ArrayList<Card> {
 		}
 	}
 	
-	//empties this list and reverts all cards' locations to their original locations 
+	//empties this list and resets all cards' locations to their original locations 
 	public void releaseCards() {
 		if (!isEmpty()) {
 			for (int i = 0; i < size(); i++) {

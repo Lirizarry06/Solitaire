@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /* Program: AcePiles.java
    Date: April 18, 2022
-   Desc: This class represents the piles in the top-left that must be filled to win the game.
+   Desc: This class represents the piles in the top-right that must be filled to win the game.
 */
 
 public class AcePiles extends ArrayList<ArrayList<Card>> {
@@ -18,6 +18,7 @@ public class AcePiles extends ArrayList<ArrayList<Card>> {
 		 }
 	}
 	
+	//adds a selected card to ace pile with the given index and returns true if successful
 	public boolean addCards(SelectedCards stack, int colNum) {
 		if (stack.size() == 1) {
 			Card stackCard = stack.get(0);				//bottom-most card in stack to be moved
@@ -26,15 +27,15 @@ public class AcePiles extends ArrayList<ArrayList<Card>> {
 			//if column is not currently empty
 			if (col.size() > 0) {
 				Card colCard = col.get(col.size() - 1);	//topmost card on destination column
-				//check legality before moving stack onto destination column and setting new locations
 				
+				//check legality before moving stack onto destination column and setting new locations
 				if (colCard.Suit == stackCard.Suit && colCard.number == stackCard.number - 1) {
 					stackCard.setLocation(new Point(325 + (100 * colNum), 25));
 					col.addAll(stack);	
 					stack.clear();
 					return true;
 				}
-				//column is currently empty (only an ace can start this column)
+			//if column is currently empty (only an ace can start this column)
 			} else if (stackCard.number == 1) {
 				stackCard.setLocation(new Point(325 + (100 * colNum), 25));
 				col.addAll(stack);	

@@ -27,7 +27,7 @@ public class SolitairePanel extends JPanel implements MouseListener, MouseMotion
 		addMouseMotionListener(this);
 	}
 	
-	//creates a random tableau and stock pile and an empty ace pile.
+	//creates a new, randomly generated game of Solitaire
 	public void newGame() {
 		
 		//create 52-card deck to be used for random distribution
